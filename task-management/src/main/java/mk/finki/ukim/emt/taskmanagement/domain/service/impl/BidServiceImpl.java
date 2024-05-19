@@ -3,6 +3,7 @@ package mk.finki.ukim.emt.taskmanagement.domain.service.impl;
 import lombok.AllArgsConstructor;
 
 import lombok.NonNull;
+import mk.finki.ukim.emt.sharedkernel.domain.events.BidCreated;
 import mk.finki.ukim.emt.taskmanagement.domain.model.Bid;
 import mk.finki.ukim.emt.taskmanagement.domain.model.BidId;
 import mk.finki.ukim.emt.taskmanagement.domain.repository.BidRepository;
@@ -17,6 +18,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import mk.finki.ukim.emt.sharedkernel.domain.infra.DomainEventPublisher;
+
 
 
 @Service
@@ -26,6 +29,8 @@ public class BidServiceImpl implements BidService {
 
     private final BidRepository bidRepository;
     private final Validator validator;
+    private final DomainEventPublisher domainEventPublisher;
+
 
     @Override
     public BidId createBid(BidForm bidForm) {
@@ -35,7 +40,8 @@ public class BidServiceImpl implements BidService {
             throw new ConstraintViolationException("the bid form is not valid", constraintValidation);
         }
         var newBid=bidRepository.saveAndFlush(toDomainObject(bidForm));
-
+        //String freelancerId, String taskId, String proposal, Money amount, LocalDate timestamp
+        //domainEventPublisher.publish(new BidCreated(newBid.getFreelancerId().getId(), newBid.getTaskId().getId(), newBid.getProposal(), newBid.getAmount(), newBid.getTimestamp()));
         return newBid.getId();
     }
 

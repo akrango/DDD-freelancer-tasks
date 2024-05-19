@@ -14,4 +14,8 @@ public class FreelancerId extends DomainObjectId {
         super(uuid);
     }
 
+    public static FreelancerId of(String uuid) {
+        FreelancerId p = new FreelancerId(uuid);
+        return p;
+    }
 }
